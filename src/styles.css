@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+/* src/styles.css */
+/* Import Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Custom Global Styles for Connecto */
+body {
+    background-color: #f0f2f5; /* Standard Facebook/Connecto background color */
+}
+.text-primary {
+    /* Custom color to match the Connecto branding in the samples */
+    color: #1877f2 !important; 
+}
+.btn-primary {
+    background-color: #1877f2;
+    border-color: #1877f2;
+}

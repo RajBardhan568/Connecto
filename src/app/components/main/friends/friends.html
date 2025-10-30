@@ -1,0 +1,66 @@
+<h2 class="mb-4">Friends Management</h2>
+
+<ul class="nav nav-tabs mb-4" id="friendsTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="requests-tab" data-bs-toggle="tab" data-bs-target="#requests" type="button" role="tab" aria-controls="requests" aria-selected="true">
+            Friend Requests ({{ pendingRequests.length }}) </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="find-tab" data-bs-toggle="tab" data-bs-target="#find" type="button" role="tab" aria-controls="find" aria-selected="false">
+            Find New Friends </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="false">
+            All Friends ({{ allFriends.length }}) </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="friendsTabContent">
+    
+    <div class="tab-pane fade show active" id="requests" role="tabpanel" aria-labelledby="requests-tab">
+        <div *ngFor="let request of pendingRequests" class="card mb-3 p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img [src]="request.profilePic" alt="Profile" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                    <h5 class="mb-0">{{ request.name }}</h5>
+                </div>
+                <div>
+                    <button class="btn btn-success me-2" (click)="confirmRequest(request.id)">Confirm</button>
+                    <button class="btn btn-secondary" (click)="deleteRequest(request.id)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="find" role="tabpanel" aria-labelledby="find-tab">
+        <input type="text" class="form-control mb-3" placeholder="Search users by name or email">
+        <div *ngFor="let user of suggestedUsers" class="card mb-3 p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img [src]="user.profilePic" alt="Profile" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                    <h5 class="mb-0">{{ user.name }}</h5>
+                </div>
+                <button [class]="user.isPending ? 'btn btn-warning' : 'btn btn-primary'" 
+                        (click)="toggleFriendRequest(user.id, user.isPending)">
+                    {{ user.isPending ? 'Cancel Request' : 'Add Friend' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-pane fade" id="all" role="tabpanel" aria-labelledby="all-tab">
+        <div *ngFor="let friend of allFriends" class="card mb-3 p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <img [src]="friend.profilePic" alt="Profile" class="rounded-circle me-3" style="width: 50px; height: 50px;">
+                    <h5 class="mb-0">{{ friend.name }}</h5>
+                </div>
+                <div>
+                    <button class="btn btn-info me-2" (click)="viewProfile(friend.id)">View Profile</button>
+                    <button class="btn btn-danger" (click)="unfriend(friend.id)">Unfriend</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

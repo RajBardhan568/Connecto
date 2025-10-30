@@ -1,0 +1,48 @@
+<div class="container-fluid bg-light vh-100 d-flex justify-content-center align-items-center">
+    <div class="row w-75 p-5 bg-white shadow-lg rounded">
+
+        <div class="col-md-6 d-flex flex-column justify-content-center text-start">
+            <h1 class="text-primary fw-bold" style="font-size: 3rem;">
+                Connecto
+            </h1>
+            <p class="fs-4 text-muted">
+                Weaving the world together
+            </p>
+        </div>
+
+        <div class="col-md-6 d-flex justify-content-center align-items-center">
+            <div class="card p-4 border-0 shadow-sm" style="width: 100%; max-width: 400px;">
+                <div class="card-body">
+                    <h5 class="card-title text-center mb-4">Log in to Connecto</h5>
+
+                    <form (ngSubmit)="onLogin()">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Email address or phone number">
+                        </div>
+                        <div class="mb-4">
+                            <input type="password" class="form-control" placeholder="Password">
+                        </div>
+                        
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Log in</button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mb-3">
+                        <a href="#" class="text-primary text-decoration-none">Forgot Password?</a> 
+                    </div>
+
+                    <hr class="mb-3">
+
+                    <div class="d-grid">
+                        <button type="button" 
+                                class="btn btn-success btn-lg" 
+                                (click)="navigateToRegistration()">
+                            Create new account
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

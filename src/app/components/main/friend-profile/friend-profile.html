@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <h2 class="mb-4">Viewing {{ friend.name }}'s Profile (US 07)</h2>
+        <div class="card shadow-sm mb-4">
+            <div class="card-body text-center">
+                <img [src]="friend.profilePic" alt="Friend's Picture" class="rounded-circle border border-5 border-white shadow-lg" style="width: 150px; height: 150px; object-fit: cover;">
+                
+                <h3 class="mt-3">{{ friend.name }}</h3>
+                <p class="text-muted">{{ friend.bio }}</p>
+
+                <div class="mt-4">
+                    <button class="btn btn-danger me-2" (click)="unfriend(friend.id)">
+                        <i class="bi bi-person-dash"></i> Unfriend
+                    </button>
+                    <button class="btn btn-success">
+                        <i class="bi bi-chat-text"></i> Message
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mb-3">{{ friend.name }}'s Recent Posts</h4>
+        <div *ngIf="friend.postsVisible; else privateContent" class="alert alert-light text-center">
+             Display friend's posts here (Friend Profile Microservice required).
+        </div>
+        <ng-template #privateContent>
+            <div class="alert alert-warning text-center">
+                This user has restricted viewing of their profile posts.
+            </div>
+        </ng-template>
+    </div>
+</div>

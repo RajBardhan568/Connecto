@@ -1,0 +1,108 @@
+<div class="container-fluid bg-light vh-100 d-flex justify-content-center align-items-center">
+    <div class="row w-100 p-3">
+        <div class="col-md-4 mx-auto">
+            <div class="card p-4 border-0 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Create a new account</h2>
+                    <p class="card-subtitle text-muted text-center mb-4">It's quick and easy.</p>
+                    <hr class="mb-4">
+
+                    <form [formGroup]="registrationForm" (ngSubmit)="onRegister()">
+                        
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="text" formControlName="firstName" class="form-control" placeholder="First name">
+                                <div *ngIf="f['firstName'].invalid && (f['firstName'].dirty || f['firstName'].touched)" class="text-danger small mt-1">
+                                    <div *ngIf="f['firstName'].errors?.['required']">Please provide a valid first name</div>
+                                    <div *ngIf="f['firstName'].errors?.['pattern']">First name must be capitalized and alphanumeric</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <input type="text" formControlName="surname" class="form-control" placeholder="Surname">
+                                <div *ngIf="f['surname'].invalid && (f['surname'].dirty || f['surname'].touched)" class="text-danger small mt-1">
+                                    <div *ngIf="f['surname'].errors?.['required']">Please provide a valid surname</div>
+                                    <div *ngIf="f['surname'].errors?.['pattern']">Surname must be capitalized and alphanumeric</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <input type="email" formControlName="emailAddress" class="form-control" placeholder="Email address">
+                            <div *ngIf="f['emailAddress'].invalid && (f['emailAddress'].dirty || f['emailAddress'].touched)" class="text-danger small mt-1">
+                                <div *ngIf="f['emailAddress'].errors?.['required']">Please provide a valid email address</div>
+                                <div *ngIf="f['emailAddress'].errors?.['email']">Invalid email format</div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="password" formControlName="password" class="form-control" placeholder="New Password">
+                                <div *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)" class="text-danger small mt-1">
+                                    <div *ngIf="f['password'].errors?.['required']">Please provide a valid password</div>
+                                    <div *ngIf="f['password'].errors?.['passwordComplexity']">Password must be 8-16 chars, contain lower, upper, digit, & special char</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <input type="password" formControlName="confirmPassword" class="form-control" placeholder="Confirm Password">
+                                <div *ngIf="f['confirmPassword'].invalid && (f['confirmPassword'].dirty || f['confirmPassword'].touched)" class="text-danger small mt-1">
+                                    <div *ngIf="f['confirmPassword'].errors?.['required']">Please provide a valid confirmation password</div>
+                                </div>
+                            </div>
+                            <div *ngIf="registrationForm.errors?.['mismatch'] && f['confirmPassword'].touched" class="text-danger small mt-2">
+                                Passwords do not match
+                            </div>
+                        </div>
+
+                        <label class="form-label small text-muted">Date of birth</label>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <input type="date" formControlName="dateOfBirth" class="form-control">
+                                <div *ngIf="f['dateOfBirth'].invalid && (f['dateOfBirth'].dirty || f['dateOfBirth'].touched)" class="text-danger small mt-1">
+                                    <div *ngIf="f['dateOfBirth'].errors?.['required']">Please provide a valid date of birth</div>
+                                    <div *ngIf="f['dateOfBirth'].errors?.['minAge']">You must be at least 13 years old.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="form-label small text-muted">Gender</label>
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <div class="form-check form-check-inline border p-2 rounded w-100">
+                                    <input class="form-check-input" type="radio" formControlName="gender" id="genderFemale" value="Female">
+                                    <label class="form-check-label w-75" for="genderFemale">Female</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check form-check-inline border p-2 rounded w-100">
+                                    <input class="form-check-input" type="radio" formControlName="gender" id="genderMale" value="Male">
+                                    <label class="form-check-label w-75" for="genderMale">Male</label>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-check form-check-inline border p-2 rounded w-100">
+                                    <input class="form-check-input" type="radio" formControlName="gender" id="genderOther" value="Others">
+                                    <label class="form-check-label w-75" for="genderOther">Other</label>
+                                </div>
+                            </div>
+                            <div *ngIf="f['gender'].invalid && (f['gender'].dirty || f['gender'].touched)" class="text-danger small mt-1">
+                                <div *ngIf="f['gender'].errors?.['required']">Please provide a valid gender</div>
+                                <div *ngIf="f['gender'].errors?.['genderValid']">Gender must be Male, Female, or Others.</div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 col-6 mx-auto">
+                            <button type="submit" [disabled]="registrationForm.invalid" class="btn btn-success btn-lg">
+                                Sign Up
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <hr class="mt-4">
+                    <p class="text-center small">
+                        <a href="#" [routerLink]="['/']" class="text-primary text-decoration-none">Already have an account? Log in.</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
