@@ -1,91 +1,73 @@
-// src/app/services/auth.service.ts
-
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { environment } from '../environments/environment';
 
-// Define Interface for DTO (recommended for type safety)
-export interface RegistrationDTO {
-    firstName: string;
-    surname: string;
-    emailAddress: string;
-    dateOfBirth: string;
-    gender: string;
-    password: string;
-    confirmPassword: string;
-}
 
-// Define Interface for Response (assuming the backend returns this structure)
 export interface UserResponse {
-    id: number;
-    firstName: string;
-    emailAddress: string;
+  token: string;
+  userId: number;
+  firstName: string;
 }
 
-// Define interface for login payload
-export interface LoginDTO {
-    emailOrPhone: string;
-    password: string;
+export interface RegistrationDTO {
+  firstName: string;
+  surname: string;
+  emailAddress: string;
+  dateOfBirth: string;
+  gender: string;
+  password: string;
+  confirmPassword: string;
 }
+
+export interface LoginDTO {
+  emailAddress: string;
+  password: string;
+}
+
+
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = environment.apiUrl;
 
-    
-    // Assuming the API Gateway runs on port 8080 (or your configured port)
-    private apiUrl = 'http://localhost:8080/api/users'; 
+  constructor(private http: HttpClient) { }
 
-    constructor(private http: HttpClient) { }
+  // --- US 01: Registration ---
+  register(registrationData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users/register`, registrationData);
+  }
 
-    /**
-     * Calls the User Microservice registration endpoint.
-     * @param data The UserRegistrationDTO payload.
-     * @returns An Observable of the registration response.
-     */
-    register(data: RegistrationDTO): Observable<UserResponse> {
-        const registrationUrl = `${this.apiUrl}/register`;
-        
-        // Use the POST method with the registration data
-        return this.http.post<UserResponse>(registrationUrl, data)
-            .pipe(
-                catchError(this.handleError) // Centralized error handling
-            );
-    }
-    
-    // --- Error Handling Function ---
-    private handleError(error: HttpErrorResponse) {
-        let errorMessage = 'An unknown error occurred!';
-        if (error.error instanceof ErrorEvent) {
-            // Client-side network error
-            errorMessage = `Network Error: ${error.error.message}`;
-        } else {
-            // Backend returned an unsuccessful response code (e.g., 400, 409)
-            // The response body (error.error) contains the centralized exception message.
-            errorMessage = error.error || `Server Error: ${error.status} ${error.statusText}`;
-        }
-        console.error(errorMessage);
-        // Return an observable with a user-facing error message
-        return throwError(() => new Error(errorMessage));
-    }
+  // --- US 02: Login and JWT Storage ---
+  login(loginData: any): Observable<any> {
+    // Expected response: { token: '...', firstName: '...', userId: 1 }
+    return this.http.post<any>(`${this.apiUrl}/users/login`, loginData).pipe(
+      tap(response => {
+        // Store the JWT and user data upon successful login
+        localStorage.setItem('auth_token', response.token);
+        localStorage.setItem('user_id', response.userId);
+        localStorage.setItem('user_firstName', response.firstName);
+      })
+    );
+  }
 
+  // Helper methods
+  getToken(): string | null {
+    return localStorage.getItem('auth_token');
+  }
 
+  getUserId(): number | null {
+    const id = localStorage.getItem('user_id');
+    return id ? +id : null;
+  }
 
-    login(data: LoginDTO): Observable<UserResponse> {
-        const loginUrl = `${this.apiUrl}/login`;
-        
-        return this.http.post<UserResponse>(loginUrl, data)
-            .pipe(
-                // In a real app, successful login would store a JWT/Token here
-                catchError(this.handleError)
-            );
-    }
-    
     logout(): void {
-        // In a real app: Clear the JWT/Token from local storage
-        localStorage.removeItem('authToken');
-        // Clear user session data
-    }
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_id');
+    localStorage.removeItem('user_firstName');
+  }
+
 }

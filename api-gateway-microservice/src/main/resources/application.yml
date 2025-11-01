@@ -1,0 +1,58 @@
+server:
+  port: 8080 # Angular calls this port
+
+# 🟢 FIX 1: Move custom JWT property under a dedicated top-level key for clarity, or keep it separate.
+# We will keep it separate but ensure the structure is clean.
+# Ensure no leading spaces or tabs here.
+
+jwt:
+  secret: ZmI1MDRiOTQ2OWE4YmI5N2JjYTYzZGU5NzA3ZDBhMDFmZTM4Yjg2N2QyM2NmYjEwMjU1MDMyYzI1NQ== # CRITICAL: No extra indentation here.
+
+spring:
+  application:
+    name: api-gateway-microservice
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+          instance-id: ${spring.application.name}
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        # Route 1: User Microservice
+        - id: user_route
+          uri: lb://user-microservice 
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - name: Authentication
+
+        # Route 2: Friend Request Microservice
+        - id: friends_route
+          uri: lb://friend-request-microservice
+          predicates:
+            - Path=/api/friends/**
+          filters:
+            - name: Authentication
+
+        # Route 3: Posts Microservice
+        - id: posts_route
+          uri: lb://posts-microservice
+          predicates:
+            - Path=/api/posts/**
+          filters:
+            - name: Authentication
