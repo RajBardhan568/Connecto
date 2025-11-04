@@ -1,22 +1,23 @@
 server:
   port: 8080 # Angular calls this port
 
-# 🟢 FIX 1: Move custom JWT property under a dedicated top-level key for clarity, or keep it separate.
-# We will keep it separate but ensure the structure is clean.
-# Ensure no leading spaces or tabs here.
-
 jwt:
-  secret: ZmI1MDRiOTQ2OWE4YmI5N2JjYTYzZGU5NzA3ZDBhMDFmZTM4Yjg2N2QyM2NmYjEwMjU1MDMyYzI1NQ== # CRITICAL: No extra indentation here.
+  secret: ZmI1MDRiOTQ2OWE4YmI5N2JjYTYzZGU5NzA3ZDBhMDFmZTM4Yjg2N2QyM2NmYjEwMjU1MDMyYzI1NQ==
 
 spring:
   application:
     name: api-gateway-microservice
+
   cloud:
     consul:
       host: localhost
       port: 8500
       discovery:
-          instance-id: ${spring.application.name}
+        instance-id: ${spring.application.name}-${server.port}
+        prefer-ip-address: true
+        hostname: localhost
+        health-check-url: http://localhost:8080/actuator/health
+
     gateway:
       default-filters:
         - DedupeResponseHeader=Vary Access-Control-Allow-Origin Access-Control-Allow-Credentials
@@ -35,7 +36,7 @@ spring:
       routes:
         # Route 1: User Microservice
         - id: user_route
-          uri: lb://user-microservice 
+          uri: lb://user-microservice
           predicates:
             - Path=/api/users/**
           filters:
